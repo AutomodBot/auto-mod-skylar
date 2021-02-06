@@ -1,0 +1,27 @@
+{
+  "name": "auto-mod-skylar",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "logger": "github:unraid/logger#master",
+    "p-map-series": "^2.1.0",
+    "p-throttle": "^4.0.0",
+    "snoostorm": "^1.5.2",
+    "snoowrap": "^1.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.25",
+    "@typescript-eslint/parser": "^4.14.2",
+    "@unraid/eslint-config": "github:unraid/eslint-config#main",
+    "eslint": "^7.19.0",
+    "typescript": "^4.1.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Alexis Tyler <xo@wvvw.me>",
+  "license": "MIT"
+}
