@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+// Load ".env" file
+require('dotenv').config();
+
+// Load app
+require('../dist/index');
