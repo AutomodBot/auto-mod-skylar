@@ -38,7 +38,7 @@ class Queue extends EventEmitter<{
 	}
 
 	async start() {
-		this.logger.debug('Started processing queue');
+		this.logger.silly('Started processing queue');
 		this.paused = false;
 		await this.run();
 
@@ -56,11 +56,11 @@ class Queue extends EventEmitter<{
 	}
 
 	async run() {
-		this.logger.debug('Starting "run" cycle...');
+		this.logger.silly('Starting "run" cycle...');
 
 		// If we're paused then stop the loop
 		if (this.paused) {
-			this.logger.debug('Paused queue, waiting for new task to be added.');
+			this.logger.silly('Paused queue, waiting for new task to be added.');
 			return;
 		}
 
@@ -89,7 +89,7 @@ class Queue extends EventEmitter<{
 			task.error = error;
 			task.status = 'failed';
 		} finally {
-			this.logger.debug('Finished "run" cycle!');
+			this.logger.silly('Finished "run" cycle!');
 		}
 
 		// Do it all again!
@@ -108,16 +108,16 @@ class Queue extends EventEmitter<{
 		const nextTimeToRun = this.lastRun + this.minimumRunSpacing;
 		const timeLeft = nextTimeToRun - now;
 		if (timeLeft >= 1) {
-			this.logger.debug('Waiting %ss before running next task.', timeLeft / 1000);
+			this.logger.silly('Waiting %ss before running next task.', timeLeft / 1000);
 			return timeLeft;
 		}
 
-		this.logger.debug('We can run the next task now');
+		this.logger.silly('We can run the next task now');
 		return 0;
 	}
 
 	async getTask(): Promise<Task | undefined> {
-		this.logger.debug('Trying to get a task...');
+		this.logger.silly('Trying to get a task...');
 		const msToWait = this.getMsToWait();
 		if (msToWait >= 1) {
 			await sleepForNSeconds(msToWait / 1000);
@@ -127,11 +127,11 @@ class Queue extends EventEmitter<{
 		// If the queue is empty then wait 10s
 		const task = this.tasks.values().next();
 		if (task.done) {
-			this.logger.debug('Queue done!');
+			this.logger.silly('Queue done!');
 			return;
 		}
 
-		this.logger.debug('Got %s task [%s]', task.value.type, task.value.id);
+		this.logger.silly('Got %s task [%s]', task.value.type, task.value.id);
 		return task.value;
 	}
 
