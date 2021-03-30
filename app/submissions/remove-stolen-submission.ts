@@ -1,8 +1,9 @@
 import { Submission } from 'snoowrap';
 import dedent from 'dedent';
 import { client } from '../client';
-import { match } from '../utils';
-import { log } from './index';
+import { utils } from '../utils';
+
+const { match, log } = utils;
 
 export const removeStolenSubmission = async (submission: Submission) => {
 	if (await match(submission, [
@@ -15,7 +16,7 @@ export const removeStolenSubmission = async (submission: Submission) => {
 					I'm pretty sure this is stolen content and/or the person posting this is a known scammer.
 					If this was a false positive please send a message to the humans who run this sub via mod mail and they'll look into it.
 				`).catch(error => {
-					log.error('Failed commenting on stolen submission with "%s".', (error as Error).message);
+					log.debug('❌ [FUNC:REMOVE_STOLEN_SUBMISSION:REMOVE_COMMENT:ERROR][AUTHOR:%s][%s]', submission.author.name, error);
 				});
 
 				// Sticky comment
@@ -28,7 +29,7 @@ export const removeStolenSubmission = async (submission: Submission) => {
 			async () => {
 				// Remove the submission
 				await submission.remove().catch(error => {
-					log.error('Failed removing stolen submission with "%s".', (error as Error).message);
+					log.debug('❌ [FUNC:REMOVE_STOLEN_SUBMISSION:REMOVE_SUBMISSION:ERROR][AUTHOR:%s][%s]', submission.author.name, error);
 				});
 			}
 		]);

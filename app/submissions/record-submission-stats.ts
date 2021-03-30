@@ -1,7 +1,8 @@
 import { Submission } from 'snoowrap';
-import { getFlair } from '../utils';
-import { log } from './index';
+import { utils } from '../utils';
 import { stats } from '.';
+
+const { getFlair, log } = utils;
 
 export const recordSubmissionStats = async (submission: Submission) => {
 	try {
@@ -12,6 +13,6 @@ export const recordSubmissionStats = async (submission: Submission) => {
 			stats.set(flair.flair_text as any, value + 1);
 		}
 	} catch (error: unknown) {
-		log.error('Failed recording submission stats with "%s".', (error as Error).message);
+		log.debug('❌ [FUNC:RECORD_SUBMISSION_STATS:ERROR][AUTHOR:%s][%s]', submission.author.name, error);
 	}
 };

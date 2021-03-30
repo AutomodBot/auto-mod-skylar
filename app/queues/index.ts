@@ -1,10 +1,11 @@
 import { EventEmitter } from 'tsee';
 import type { Submission, Comment } from 'snoowrap';
-import { shouldWeIgnoreThisTask, sleepForNSeconds } from '../utils';
-import { log as logger } from '../log';
+import { utils } from '../utils';
 import { removeUnverifiedSellerSubmissions, removeSubmissionAskingForUpvotes, removeSpamSubmission } from '../submissions';
 import { logComment, removeSpamComment } from '../comments';
 import { Task } from './task';
+
+const { shouldWeIgnoreThisTask, sleep, log: logger } = utils;
 
 const isSubmission = (item: Comment | Submission): item is Submission => Object.keys(item).includes('comments');
 const isComment = (item: Comment | Submission): item is Comment => !Object.keys(item).includes('comments');
@@ -38,7 +39,7 @@ class Queue extends EventEmitter<{
 	}
 
 	async start() {
-		this.logger.silly('Started processing queue');
+		this.logger.debug('ℹ️ [QUEUE:STARTED]');
 		this.paused = false;
 		await this.run();
 
@@ -48,6 +49,8 @@ class Queue extends EventEmitter<{
 	}
 
 	async stop() {
+		this.logger.debug('ℹ️ [QUEUE:STOPPED]');
+
 		// Remove old event handler
 		this.off('add', this.start);
 
@@ -56,11 +59,8 @@ class Queue extends EventEmitter<{
 	}
 
 	async run() {
-		this.logger.silly('Starting "run" cycle...');
-
 		// If we're paused then stop the loop
 		if (this.paused) {
-			this.logger.silly('Paused queue, waiting for new task to be added.');
 			return;
 		}
 
@@ -88,8 +88,6 @@ class Queue extends EventEmitter<{
 		} catch (error: unknown) {
 			task.error = error;
 			task.status = 'failed';
-		} finally {
-			this.logger.silly('Finished "run" cycle!');
 		}
 
 		// Do it all again!
@@ -99,7 +97,7 @@ class Queue extends EventEmitter<{
 	getMsToWait() {
 		// Too many tasks are already running
 		if (this.runningTasks.size >= this.concurrency) {
-			this.logger.debug('Too many tasks running (%s/%s)', this.runningTasks.size, this.concurrency);
+			this.logger.debug('🔥 [QUEUE:TOO_MANY_TASKS_RUNNING][%s/%s]', this.runningTasks.size, this.concurrency);
 			return this.minimumRunSpacing;
 		}
 
@@ -108,30 +106,26 @@ class Queue extends EventEmitter<{
 		const nextTimeToRun = this.lastRun + this.minimumRunSpacing;
 		const timeLeft = nextTimeToRun - now;
 		if (timeLeft >= 1) {
-			this.logger.silly('Waiting %ss before running next task.', timeLeft / 1000);
 			return timeLeft;
 		}
 
-		this.logger.silly('We can run the next task now');
 		return 0;
 	}
 
 	async getTask(): Promise<Task | undefined> {
-		this.logger.silly('Trying to get a task...');
 		const msToWait = this.getMsToWait();
 		if (msToWait >= 1) {
-			await sleepForNSeconds(msToWait / 1000);
+			await sleep(msToWait);
 			return this.getTask();
 		}
 
 		// If the queue is empty then wait 10s
 		const task = this.tasks.values().next();
 		if (task.done) {
-			this.logger.silly('Queue done!');
 			return;
 		}
 
-		this.logger.silly('Got %s task [%s]', task.value.type, task.value.id);
+		this.logger.debug('ℹ️ [QUEUE:TASK:%s:%s]', task.value.type.toUpperCase(), task.value.id);
 		return task.value;
 	}
 
@@ -141,15 +135,12 @@ class Queue extends EventEmitter<{
 			return;
 		}
 
-		this.logger.debug('Processing %s %s by %s', task.type, task.item.id, task.item.author.name);
+		this.logger.debug('⌛ [QUEUE:TASK:%s:%s]', task.type, task.id);
 
 		// Comment
 		if (isComment(task.item)) {
 			await logComment(task.item);
 			await removeSpamComment(task.item);
-
-			// T
-			// 	await removeAbuseComment(comment);
 		}
 
 		// Submission

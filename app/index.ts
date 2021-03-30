@@ -1,6 +1,8 @@
 import { app } from './app';
-import { log } from './log';
+import { utils } from './utils';
+
+const { log } = utils;
 
 app().catch((error: unknown) => {
-	log.error('App closed with error "%s".', (error as Error).message);
+	log.debug('❌ [APP:ERROR][%s]', error);
 });

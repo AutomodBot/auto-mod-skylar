@@ -1,16 +1,17 @@
 import { Submission } from 'snoowrap';
 import { client } from '../client';
-import { getDescription, getFlair, match, removeUnverifiedSellerSubmission } from '../utils';
-import { log } from './index';
+import { utils } from '../utils';
+
+const { getDescription, getFlair, match, removeUnverifiedSellerSubmission, log } = utils;
 
 export const removeUnverifiedSellerSubmissions = async (submission: Submission) => {
-	try {
-		const name = String(submission.author.name);
-		const flair = await getFlair('horny', submission.author.name);
+	const name = String(submission.author.name);
+	const flair = await getFlair('horny', submission.author.name);
 
+	try {
 		// Skip seller's message's
 		if (String(flair.flair_text).toLowerCase() === 'seller') {
-			log.silly('Skipping submission by u/%s as they\'re a seller.', name);
+			log.debug('ℹ️ [SUBMISSION:SKIPPED][AUTHOR:%s][%s][%s]', submission.author.name, flair.flair_text, submission.title);
 			return;
 		}
 
@@ -40,7 +41,7 @@ export const removeUnverifiedSellerSubmissions = async (submission: Submission) 
 				'frisk.chat',
 				'buy content'
 			], description.toLowerCase())) {
-				log.info('Setting user flair to "UNVERIFIED seller" for u/%s as they have a known site or phrase in their profile description.', name);
+				log.info('⚠️ [UNVERIFIED_SELLER_DETECTED][AUTHOR:%s][%s][%s]', submission.author.name, flair.flair_text, submission.title);
 				// Set user's flair
 				// @ts-expect-error
 				await client._selectFlair({
@@ -48,7 +49,7 @@ export const removeUnverifiedSellerSubmissions = async (submission: Submission) 
 					name,
 					flair_template_id: '3d7f8042-39be-11eb-910f-0eb386cc13ed'
 				}).catch((error: unknown) => {
-					log.error('Failed assigning user flair to u/%s with "%s"', name, (error as Error).message);
+					log.info('❌ [UNVERIFIED_SELLER_DETECTED:ERROR][AUTHOR:%s][%s][%s]', submission.author.name, flair.flair_text, error);
 				});
 
 				// Remove post
@@ -57,9 +58,9 @@ export const removeUnverifiedSellerSubmissions = async (submission: Submission) 
 			}
 
 			// No flair and we couldn't anything that points to them being a seller
-			log.info('Skipping submission by u/%s as they have no user flair and we don\'t think they\'re a seller.', name);
+			log.debug('ℹ️ [SUBMISSION:SKIPPED][AUTHOR:%s][%s][%s]', submission.author.name, flair.flair_text, submission.title);
 		}
 	} catch (error: unknown) {
-		log.error('Failed processing submission with "%s"', (error as Error).message);
+		log.debug('❌ [UNVERIFIED_SELLER_DETECTED:ERROR][AUTHOR:%s][%s][%s]', submission.author.name, flair.flair_text, error);
 	}
 };

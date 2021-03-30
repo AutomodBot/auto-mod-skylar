@@ -14,7 +14,8 @@ module.exports = {
 			// eslint-disable-next-line
 			max_memory_restart: '250M',
 			env: {
-				LOG_LEVEL: 'debug'
+				LOG_LEVEL: 'debug',
+				NODE_ENV: 'production'
 			}
 		}
 	],

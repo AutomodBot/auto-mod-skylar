@@ -6,6 +6,7 @@
 		"node_modules"
 	],
   	"compilerOptions": {
+		"experimentalDecorators": true,
         "skipLibCheck": true,
 		/* Basic Options */
 		// "incremental": true,                   /* Enable incremental compilation */

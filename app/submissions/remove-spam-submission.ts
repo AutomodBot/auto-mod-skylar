@@ -1,6 +1,7 @@
 import { Submission } from 'snoowrap';
-import { getFlair, match, matchAndRemove } from '../utils';
-import { spamLogger } from './index';
+import { utils } from '../utils';
+
+const { getFlair, match, matchAndRemove } = utils;
 
 export const removeSpamSubmission = async (submission: Submission) => {
 	// Spam words
@@ -17,7 +18,7 @@ export const removeSpamSubmission = async (submission: Submission) => {
 		'1TB',
 		'Mega',
 		'babynicole'
-	], submission.title, spamLogger);
+	], submission.title);
 
 	// Discord spam
 	await match(submission, [
@@ -34,8 +35,6 @@ export const removeSpamSubmission = async (submission: Submission) => {
 			return;
 		}
 
-		const flair = await getFlair('horny', submission.author.name);
-		spamLogger.debug('%s [%s] %s', submission.author.name, flair.flair_text, submission.permalink);
 		await submission.reply('**DO NOT POST DISCORD SPAM!**');
 		await submission.remove({
 			spam: true
@@ -45,5 +44,5 @@ export const removeSpamSubmission = async (submission: Submission) => {
 	// Spam domains
 	await matchAndRemove(submission, [
 		'deepsukebe.io'
-	], submission.domain, spamLogger);
+	], submission.domain);
 };

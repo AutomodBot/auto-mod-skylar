@@ -1,6 +1,6 @@
 import pThrottle from 'p-throttle';
 import { client } from '../client';
-import { log } from '../log';
+import { utils } from '../utils';
 import pWaitFor from 'p-wait-for';
 import {
 	removeSubmissionsByDeletedUsers,
@@ -9,6 +9,8 @@ import {
 	recordSubmissionStats,
 	stats
 } from '../submissions';
+
+const { log } = utils;
 
 const onceASecond = pThrottle({
 	limit: 1,
@@ -21,7 +23,7 @@ export const scanSubmissionsForViolations = async () => {
 		limit: 250
 	});
 	let submissionsToProcess = submissions.length;
-	const throttled = onceASecond(async index => {
+	const throttled = onceASecond(async (index: number) => {
 		try {
 			await removeSubmissionsByDeletedUsers(submissions[index]);
 			await removeStolenSubmission(submissions[index]);
@@ -36,9 +38,9 @@ export const scanSubmissionsForViolations = async () => {
 	});
 
 	// Process the submissions
-	log.silly('Got %s submissions from the new list, processing...', submissions.length);
+	log.debug('Got %s submissions from the new list, processing...', submissions.length);
 	for (let index = 0; index < submissionsToProcess; index++) {
-		throttled(index);
+		throttled(index).catch(console.error);
 	}
 
 	// Wait until all submissions are processed

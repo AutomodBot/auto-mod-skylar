@@ -6,11 +6,13 @@
   "dependencies": {
     "dedent": "^0.7.0",
     "dotenv": "^8.2.0",
+    "enmap": "^5.8.4",
     "logger": "github:unraid/logger#master",
     "p-break": "^1.0.0",
     "p-map-series": "^2.1.0",
     "p-throttle": "^4.1.1",
     "p-wait-for": "^3.2.0",
+    "pretty-ms": "^7.0.1",
     "simplequeue": "0.0.4",
     "snoostorm": "^1.5.2",
     "snoowrap": "^1.22.0",
@@ -22,6 +24,7 @@
     "@typescript-eslint/parser": "^4.19.0",
     "@unraid/eslint-config": "github:unraid/eslint-config#main",
     "eslint": "^7.22.0",
+    "tsup": "^4.8.21",
     "typescript": "^4.2.3"
   },
   "scripts": {

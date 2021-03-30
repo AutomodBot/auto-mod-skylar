@@ -1,9 +1,10 @@
 import { CommentStream, SubmissionStream } from 'snoostorm';
 import { client } from './client';
 import { subreddit as subredditName } from './config';
-import { log } from './log';
+import { utils } from './utils';
 import { queue } from './queues';
 
+const { log } = utils;
 const collectors = {
 	live: async () => {
 		// ,
@@ -32,7 +33,7 @@ const collectors = {
 
 		// Push each submission to the queue
 		submissions.on('item', async item => {
-			log.info('Adding submission [%s]', item.id);
+			log.debug('ℹ️ [COLLECTOR:SUBMISSION:ADD][%s]', item.id);
 			queue.add({
 				id: item.id,
 				status: 'idle',
@@ -51,7 +52,7 @@ const collectors = {
 
 		// Push all to the queue
 		submissions.forEach(item => {
-			log.info('Adding submission [%s]', item.id);
+			log.debug('ℹ️ [COLLECTOR:SUBMISSION:ADD][%s]', item.id);
 			queue.add({
 				id: item.id,
 				status: 'idle',
@@ -84,9 +85,9 @@ export const startCollector = async (collector: 'live' | 'massscan') => {
 	}
 
 	// Start collector
-	log.info('Starting "%s" collector', collector);
+	log.debug('✅ [COLLECTOR:%s:STARTED]', collector.toUpperCase());
 	collectors[collector]().catch(error => {
-		log.error('Failed running "%s" collector with "%s"', collector, error.message);
+		log.debug('❌ [COLLECTOR:%s:ERROR][%s]', collector.toUpperCase(), error);
 	});
 };
 
@@ -96,7 +97,7 @@ export const app = async () => {
 
 	// Start queue
 	queue.start().catch(error => {
-		log.error('Failed processing queue with "%s"', error.message);
+		log.debug('❌ [QUEUE:ERROR][%s]', error);
 	});
 
 	// Start collectors
@@ -106,6 +107,6 @@ export const app = async () => {
 		// // ,
 		startCollector('live')
 	]).catch(error => {
-		log.error('Failed starting collectors with "%s"', error.message);
+		log.debug('❌ [COLLECTOR:ERROR][%s]', error);
 	});
 };
