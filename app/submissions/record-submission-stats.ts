@@ -1,7 +1,7 @@
 import { Submission } from 'snoowrap';
 import { getFlair } from '../utils';
 import { log } from './index';
-import { stats } from '../submissions';
+import { stats } from '.';
 
 export const recordSubmissionStats = async (submission: Submission) => {
 	try {

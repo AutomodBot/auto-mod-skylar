@@ -9,10 +9,10 @@ export const spamLogger = log.createChild({
 });
 
 export * from './log-submission';
-export * from './recordSubmissionStats';
-export * from './removeSpamSubmission';
-export * from './removeStolenSubmission';
-export * from './removeSubmissionAskingForUpvotes';
+export * from './record-submission-stats';
+export * from './remove-spam-submission';
+export * from './remove-stolen-submission';
+export * from './remove-submission-asking-for-upvotes';
 export * from './remove-submissions-by-deleted-users';
-export * from './removeUnverifiedSellerSubmissions';
+export * from './remove-unverified-seller-submissions';
 export * from './stats';

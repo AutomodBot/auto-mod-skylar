@@ -15,7 +15,8 @@ export const removeSpamSubmission = async (submission: Submission) => {
 		'nofakelink',
 		'jonesandrea0056',
 		'1TB',
-		'Mega'
+		'Mega',
+		'babynicole'
 	], submission.title, spamLogger);
 
 	// Discord spam
