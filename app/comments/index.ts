@@ -35,7 +35,9 @@ const removeSpamSubreddits = async (comment: Comment) => {
 	const spamSubreddits = [
 		'r/dirty18girls',
 		'r/bestofyoungnsfwreddit',
-		'r/Sexybabesgonewild'
+		'r/Sexybabesgonewild',
+		'r/TikTokGirlSex',
+		'r/Youngbabesgonewild'
 	];
 
 	if (spamSubreddits.some(spamSubreddit => comment.body.toLowerCase().includes(spamSubreddit))) {

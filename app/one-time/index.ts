@@ -2,7 +2,13 @@ import pThrottle from 'p-throttle';
 import { client } from '../client';
 import { log } from '../log';
 import pWaitFor from 'p-wait-for';
-import { recordSubmissionStats, removeStolenSubmission, removeUnverifiedSellerSubmissions, stats, removeSubmissionsByDeletedUsers } from '../submissions';
+import {
+	removeSubmissionsByDeletedUsers,
+	removeStolenSubmission,
+	removeUnverifiedSellerSubmissions,
+	recordSubmissionStats,
+	stats
+} from '../submissions';
 
 const onceASecond = pThrottle({
 	limit: 1,

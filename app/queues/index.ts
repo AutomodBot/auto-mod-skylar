@@ -2,7 +2,7 @@ import { EventEmitter } from 'tsee';
 import type { Submission, Comment } from 'snoowrap';
 import { shouldWeIgnoreThisTask, sleepForNSeconds } from '../utils';
 import { log as logger } from '../log';
-import { removeSpamSubmission, removeSubmissionAskingForUpvotes, removeUnverifiedSellerSubmissions } from '../submissions';
+import { removeUnverifiedSellerSubmissions, removeSubmissionAskingForUpvotes, removeSpamSubmission } from '../submissions';
 import { logComment, removeSpamComment } from '../comments';
 import { Task } from './task';
 
