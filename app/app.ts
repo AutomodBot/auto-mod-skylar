@@ -10,7 +10,7 @@ const collectors = {
 		// Comments
 		const comments = new CommentStream(client, {
 			subreddit: subredditName,
-			limit: 1000,
+			limit: 500,
 			pollTime: 30000
 		});
 
