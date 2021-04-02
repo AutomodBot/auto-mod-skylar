@@ -31,19 +31,19 @@ export const utils = {
 	async shouldWeIgnoreThisTask(task: Task) {
 		// Ignore AutoModerator posts
 		if (task.item.author.name === 'AutoModerator') {
-			utils.log.debug('ℹ️ [TASK:IGNORED][AUTHOR:AutoModerator][%s]', task.item.id);
+			utils.log.debug('ℹ️  [TASK:IGNORED][AUTHOR:AutoModerator][%s]', task.item.id);
 			return true;
 		}
 
 		// Ignore myself
 		if (task.item.author.name === 'AutoModSkylar') {
-			utils.log.debug('ℹ️ [TASK:IGNORED][AUTHOR:AutoModSkylar][%s]', task.item.id);
+			utils.log.debug('ℹ️  [TASK:IGNORED][AUTHOR:AutoModSkylar][%s]', task.item.id);
 			return true;
 		}
 
 		// Ignore my creator
 		if (task.item.author.name === 'OmgImAlexis') {
-			utils.log.debug('ℹ️ [TASK:IGNORED][AUTHOR:OmgImAlexis][%s]', task.item.id);
+			utils.log.debug('ℹ️  [TASK:IGNORED][AUTHOR:OmgImAlexis][%s]', task.item.id);
 			return true;
 		}
 

@@ -11,7 +11,7 @@ export const trace = () => {
 			return Promise.resolve(returnValue).finally(() => {
 				const end = performance.now();
 				const timeTaken = prettyMs(end - start, { formatSubMilliseconds: true, compact: true });
-				console.debug('ℹ️ [DEBUG][TRACE][%s][%s]', propertyKey, timeTaken);
+				console.debug('ℹ️  [DEBUG][TRACE][%s][%s]', propertyKey, timeTaken);
 			});
 		};
 

@@ -33,7 +33,7 @@ const collectors = {
 
 		// Push each submission to the queue
 		submissions.on('item', async item => {
-			log.debug('ℹ️ [COLLECTOR:SUBMISSION:ADD][%s]', item.id);
+			log.debug('ℹ️  [COLLECTOR:SUBMISSION:ADD][%s]', item.id);
 			queue.add({
 				id: item.id,
 				status: 'idle',
@@ -52,7 +52,7 @@ const collectors = {
 
 		// Push all to the queue
 		submissions.forEach(item => {
-			log.debug('ℹ️ [COLLECTOR:SUBMISSION:ADD][%s]', item.id);
+			log.debug('ℹ️  [COLLECTOR:SUBMISSION:ADD][%s]', item.id);
 			queue.add({
 				id: item.id,
 				status: 'idle',

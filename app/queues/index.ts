@@ -41,7 +41,7 @@ class Queue extends EventEmitter<{
 	}
 
 	async start() {
-		this.logger.debug('ℹ️ [QUEUE:STARTED]');
+		this.logger.debug('ℹ️  [QUEUE:STARTED]');
 		this.paused = false;
 		await this.run();
 
@@ -51,7 +51,7 @@ class Queue extends EventEmitter<{
 	}
 
 	async stop() {
-		this.logger.debug('ℹ️ [QUEUE:STOPPED]');
+		this.logger.debug('ℹ️  [QUEUE:STOPPED]');
 
 		// Remove old event handler
 		this.off('add', this.start);
@@ -133,7 +133,7 @@ class Queue extends EventEmitter<{
 			return;
 		}
 
-		this.logger.debug('ℹ️ [QUEUE:GET_TASK:%s:%s]', task.value.type.toUpperCase(), task.value.id);
+		this.logger.debug('ℹ️  [QUEUE:GET_TASK:%s:%s]', task.value.type.toUpperCase(), task.value.id);
 		return task.value;
 	}
 

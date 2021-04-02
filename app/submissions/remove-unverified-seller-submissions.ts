@@ -11,7 +11,7 @@ export const removeUnverifiedSellerSubmissions = async (submission: Submission) 
 	try {
 		// Skip seller's message's
 		if (String(flair.flair_text).toLowerCase() === 'seller') {
-			log.debug('ℹ️ [SUBMISSION:SKIPPED][AUTHOR:%s][%s][%s]', submission.author.name, flair.flair_text, submission.title);
+			log.debug('ℹ️  [SUBMISSION:SKIPPED][AUTHOR:%s][%s][%s]', submission.author.name, flair.flair_text, submission.title);
 			return;
 		}
 
@@ -58,7 +58,7 @@ export const removeUnverifiedSellerSubmissions = async (submission: Submission) 
 			}
 
 			// No flair and we couldn't anything that points to them being a seller
-			log.debug('ℹ️ [SUBMISSION:SKIPPED][AUTHOR:%s][%s][%s]', submission.author.name, flair.flair_text, submission.title);
+			log.debug('ℹ️  [SUBMISSION:SKIPPED][AUTHOR:%s][%s][%s]', submission.author.name, flair.flair_text, submission.title);
 		}
 	} catch (error: unknown) {
 		log.debug('❌ [UNVERIFIED_SELLER_DETECTED:ERROR][AUTHOR:%s][%s][%s]', submission.author.name, flair.flair_text, error);
