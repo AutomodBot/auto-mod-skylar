@@ -83,10 +83,15 @@ class Queue extends EventEmitter<{
 
 			// Process task
 			await this.processTask(task);
+
+			// Success
+			this.logger.debug('✅ [QUEUE:TASK_SUCCESS:%s:%s][%s]', task.type.toUpperCase(), task.id);
 		} catch (error: unknown) {
+			// Task failed
 			task.error = error;
 			task.status = 'failed';
 			this.failedTasks.add(task);
+			this.logger.error('❌ [QUEUE:TASK_FAILED:%s:%s][%s]', task.type.toUpperCase(), task.id, error);
 		} finally {
 			// Delete task from queues
 			this.runningTasks.delete(task);
