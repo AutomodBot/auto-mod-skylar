@@ -4,7 +4,7 @@ import { Comment, Submission } from 'snoowrap';
 import { Task } from '../queues/task';
 import EnhancedMap from 'enmap';
 
-const flairCache = new EnhancedMap('flair-cache');
+const flairCache = new EnhancedMap();
 
 export const utils = {
 	log: console,
