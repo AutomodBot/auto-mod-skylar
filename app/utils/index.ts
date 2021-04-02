@@ -3,11 +3,12 @@ import { trace } from './trace';
 import { Comment, Submission } from 'snoowrap';
 import { Task } from '../queues/task';
 import EnhancedMap from 'enmap';
+import { log } from './log';
 
 const flairCache = new EnhancedMap();
 
 export const utils = {
-	log: console,
+	log,
 	/**
 	 * Sleep for ms
 	 */
