@@ -11,7 +11,7 @@ const collectors = {
 		const comments = new CommentStream(client, {
 			subreddit: subredditName,
 			limit: 1000,
-			pollTime: 10000
+			pollTime: 30000
 		});
 
 		// Push each comment to the queue
@@ -27,7 +27,7 @@ const collectors = {
 
 		const submissions = new SubmissionStream(client, {
 			subreddit: subredditName,
-			limit: 1000,
+			limit: 100,
 			pollTime: 10000
 		});
 
