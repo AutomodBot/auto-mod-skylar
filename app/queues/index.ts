@@ -85,7 +85,7 @@ class Queue extends EventEmitter<{
 			await this.processTask(task);
 
 			// Success
-			this.logger.debug('✅ [QUEUE:TASK_SUCCESS:%s:%s][%s]', task.type.toUpperCase(), task.id);
+			this.logger.debug('✅ [QUEUE:TASK_SUCCESS:%s:%s]', task.type.toUpperCase(), task.id);
 		} catch (error: unknown) {
 			// Task failed
 			task.error = error;
