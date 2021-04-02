@@ -23,6 +23,7 @@ class Queue extends EventEmitter<{
 	private readonly tasks: Set<Task>;
 	private readonly minimumRunSpacing: number;
 	private readonly runningTasks: Set<Task> = new Set();
+	private readonly failedTasks: Set<Task> = new Set();
 	private readonly concurrency: number;
 	private readonly logger = logger;
 	private lastRun: number;
@@ -36,6 +37,7 @@ class Queue extends EventEmitter<{
 		this.concurrency = options?.concurrency ?? 1;
 		this.lastRun = new Date().getTime() - this.minimumRunSpacing;
 		this.runningTasks = new Set<Task>();
+		this.failedTasks = new Set<Task>();
 	}
 
 	async start() {
@@ -81,13 +83,14 @@ class Queue extends EventEmitter<{
 
 			// Process task
 			await this.processTask(task);
-
-			// Delete successful task from queues
-			this.runningTasks.delete(task);
-			this.tasks.delete(task);
 		} catch (error: unknown) {
 			task.error = error;
 			task.status = 'failed';
+			this.failedTasks.add(task);
+		} finally {
+			// Delete task from queues
+			this.runningTasks.delete(task);
+			this.tasks.delete(task);
 		}
 
 		// Do it all again!
@@ -125,7 +128,7 @@ class Queue extends EventEmitter<{
 			return;
 		}
 
-		this.logger.debug('ℹ️ [QUEUE:TASK:%s:%s]', task.value.type.toUpperCase(), task.value.id);
+		this.logger.debug('ℹ️ [QUEUE:GET_TASK:%s:%s]', task.value.type.toUpperCase(), task.value.id);
 		return task.value;
 	}
 
@@ -135,7 +138,7 @@ class Queue extends EventEmitter<{
 			return;
 		}
 
-		this.logger.debug('⌛ [QUEUE:TASK:%s:%s]', task.type, task.id);
+		this.logger.debug('⌛ [QUEUE:PROCESS_TASK:%s:%s]', task.type.toUpperCase(), task.id);
 
 		// Comment
 		if (isComment(task.item)) {
