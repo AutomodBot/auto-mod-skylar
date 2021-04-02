@@ -6,7 +6,7 @@ import EnhancedMap from 'enmap';
 
 const flairCache = new EnhancedMap('flair-cache');
 
-const utils = {
+export const utils = {
 	log: console,
 	/**
 	 * Sleep for ms
@@ -20,8 +20,8 @@ const utils = {
 	},
 	async random() {
 		const toWait = Math.random() ? Math.random() * 1000 : Math.random();
-		this.log.info('Waiting %sms', toWait);
-		await this.sleep(toWait);
+		utils.log.info('Waiting %sms', toWait);
+		await utils.sleep(toWait);
 		return Math.random();
 	},
 	async getClient() {
@@ -31,19 +31,19 @@ const utils = {
 	async shouldWeIgnoreThisTask(task: Task) {
 		// Ignore AutoModerator posts
 		if (task.item.author.name === 'AutoModerator') {
-			this.log.debug('ℹ️ [TASK:IGNORED][AUTHOR:AutoModerator][%s]', task.item.id);
+			utils.log.debug('ℹ️ [TASK:IGNORED][AUTHOR:AutoModerator][%s]', task.item.id);
 			return true;
 		}
 
 		// Ignore myself
 		if (task.item.author.name === 'AutoModSkylar') {
-			this.log.debug('ℹ️ [TASK:IGNORED][AUTHOR:AutoModSkylar][%s]', task.item.id);
+			utils.log.debug('ℹ️ [TASK:IGNORED][AUTHOR:AutoModSkylar][%s]', task.item.id);
 			return true;
 		}
 
 		// Ignore my creator
 		if (task.item.author.name === 'OmgImAlexis') {
-			this.log.debug('ℹ️ [TASK:IGNORED][AUTHOR:OmgImAlexis][%s]', task.item.id);
+			utils.log.debug('ℹ️ [TASK:IGNORED][AUTHOR:OmgImAlexis][%s]', task.item.id);
 			return true;
 		}
 
@@ -55,7 +55,7 @@ const utils = {
 
 		// If missing cache it
 		if (!isFlairCached) {
-			const client = await this.getClient();
+			const client = await utils.getClient();
 			const flair = await client.getSubreddit(subreddit).getUserFlair(name);
 			flairCache.set(flairKey, flair);
 			return flair;
@@ -65,7 +65,7 @@ const utils = {
 		return flairCache.get(flairKey);
 	},
 	async getDescription(name: string) {
-		const client = await this.getClient();
+		const client = await utils.getClient();
 		const user = await client.getUser(name).fetch();
 		return String(user.toJSON().subreddit?.public_description);
 	},
@@ -77,7 +77,7 @@ const utils = {
 		reason?: string;
 		duration?: number;
 	}) {
-		this.log.info('banning %s in %s', name, subreddit);
+		utils.log.info('banning %s in %s', name, subreddit);
 
 		const banUserOptions = {
 			name,
@@ -91,7 +91,7 @@ const utils = {
 				banReason: options.reason
 			} : {})
 		};
-		const client = await this.getClient();
+		const client = await utils.getClient();
 		return client.getSubreddit(subreddit).banUser(banUserOptions);
 	},
 	async match<Item = Submission | Comment>(item: Item, needles: any[], haystack: string): Promise<Item | false> {
@@ -102,7 +102,7 @@ const utils = {
 		return item;
 	},
 	async matchAndRemove(item: Submission | Comment, needles: any[], haystack: string) {
-		if (await this.match(item, needles, haystack)) {
+		if (await utils.match(item, needles, haystack)) {
 			await item.remove({
 				spam: true
 			});
@@ -110,15 +110,15 @@ const utils = {
 	},
 	async removeUnverifiedSellerSubmission(submission: Submission) {
 		// Comment on the submission to let them know why it was removed
-		this.log.debug('⚠️ [SUBMISSION:SELLER_DETECTED][AUTHOR:%s][%s]', submission.author.name, submission.id);
+		utils.log.debug('⚠️ [SUBMISSION:SELLER_DETECTED][AUTHOR:%s][%s]', submission.author.name, submission.id);
 		const message = 'You\'ve been marked as a possible seller. Please follow the instructions in the [wiki](http://reddit.com/r/horny/wiki/verification) to be verified.';
 		const comment = await submission.reply(message).catch(error => {
-			this.log.debug('❌ [SUBMISSION:SELLER_DETECTED:ERROR][AUTHOR:%s][%s]', submission.author.name, error);
+			utils.log.debug('❌ [SUBMISSION:SELLER_DETECTED:ERROR][AUTHOR:%s][%s]', submission.author.name, error);
 		});
 
 		// Sticky comment
 		if (comment) {
-			const client = await this.getClient();
+			const client = await utils.getClient();
 			await client.getComment(comment.id).distinguish({
 				sticky: true
 			});
@@ -126,7 +126,7 @@ const utils = {
 
 		// Remove the submission
 		await submission.remove().catch(error => {
-			this.log.debug('❌ [SUBMISSION:SELLER_DETECTED:ERROR][AUTHOR:%s][%s]', submission.author.name, error);
+			utils.log.debug('❌ [SUBMISSION:SELLER_DETECTED:ERROR][AUTHOR:%s][%s]', submission.author.name, error);
 		});
 	}
 };
@@ -143,7 +143,3 @@ if (process.env.NODE_ENV !== 'production') {
 	decorate([trace()], utils, 'shouldWeIgnoreThisTask', 1);
 	decorate([trace()], utils, 'sleep', 1);
 }
-
-export {
-	utils
-};
