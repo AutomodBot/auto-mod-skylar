@@ -96,7 +96,7 @@ class Queue extends EventEmitter<{
 
 	getMsToWait() {
 		// Too many tasks are already running
-		if (this.runningTasks.size >= this.concurrency) {
+		if (this.runningTasks.size > this.concurrency) {
 			this.logger.debug('🔥 [QUEUE:TOO_MANY_TASKS_RUNNING][%s/%s]', this.runningTasks.size, this.concurrency);
 			return this.minimumRunSpacing;
 		}
