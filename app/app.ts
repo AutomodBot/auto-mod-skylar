@@ -27,7 +27,7 @@ const collectors = {
 
 		const submissions = new SubmissionStream(client, {
 			subreddit: subredditName,
-			limit: 100,
+			limit: 1000,
 			pollTime: 10000
 		});
 
@@ -85,9 +85,9 @@ export const startCollector = async (collector: 'live' | 'massscan') => {
 	}
 
 	// Start collector
-	log.debug('✅ [COLLECTOR:%s:STARTED]', collector.toUpperCase());
+	log.info('✅ [COLLECTOR:%s:STARTED]', collector.toUpperCase());
 	collectors[collector]().catch(error => {
-		log.debug('❌ [COLLECTOR:%s:ERROR][%s]', collector.toUpperCase(), error);
+		log.error('❌ [COLLECTOR:%s:ERROR][%s]', collector.toUpperCase(), error);
 	});
 };
 
@@ -97,7 +97,7 @@ export const app = async () => {
 
 	// Start queue
 	queue.start().catch(error => {
-		log.debug('❌ [QUEUE:ERROR][%s]', error);
+		log.error('❌ [QUEUE:ERROR][%s]', error);
 	});
 
 	// Start collectors
@@ -107,6 +107,6 @@ export const app = async () => {
 		// // ,
 		startCollector('live')
 	]).catch(error => {
-		log.debug('❌ [COLLECTOR:ERROR][%s]', error);
+		log.error('❌ [COLLECTOR:ERROR][%s]', error);
 	});
 };
