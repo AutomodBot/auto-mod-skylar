@@ -10,7 +10,8 @@ export const removeSpamSubreddits = async (comment: Comment) => {
 		'r/Sexybabesgonewild',
 		'r/TikTokGirlSex',
 		'r/Youngbabesgonewild',
-		'r/Gonewildhotchicks'
+		'r/Gonewildhotchicks',
+		'r/CasualsHookups'
 	];
 
 	if (spamSubreddits.some(spamSubreddit => comment.body.toLowerCase().includes(spamSubreddit))) {
