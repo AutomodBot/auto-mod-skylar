@@ -57,6 +57,8 @@ export const utils = {
 		if (!isFlairCached) {
 			const client = await utils.getClient();
 			const flair = await client.getSubreddit(subreddit).getUserFlair(name);
+			// Set NO_FLAIR_SET if it's missing
+			flair.flair_text = flair.flair_text ?? 'NO_FLAIR_SET';
 			flairCache.set(flairKey, flair);
 			return flair;
 		}
