@@ -7,23 +7,23 @@ import { queue } from './queues';
 const { log } = utils;
 const collectors = {
 	live: async () => {
-		// ,
-		// const comments = new CommentStream(client, {
-		// 	subreddit: subredditName,
-		// 	limit: 1000,
-		// 	pollTime: 10000
-		// });
+		// Comments
+		const comments = new CommentStream(client, {
+			subreddit: subredditName,
+			limit: 1000,
+			pollTime: 10000
+		});
 
-		// // Push each comment to the queue
-		// comments.on('item', async item => {
-		// 	log.info('Adding comment [%s]', item.id);
-		// 	queue.add({
-		// 		id: item.id,
-		// 		status: 'idle',
-		// 		type: 'comment',
-		// 		item
-		// 	});
-		// });
+		// Push each comment to the queue
+		comments.on('item', async item => {
+			log.debug('ℹ️  [COLLECTOR:COMMENT:ADD][%s]', item.id);
+			queue.add({
+				id: item.id,
+				status: 'idle',
+				type: 'comment',
+				item
+			});
+		});
 
 		const submissions = new SubmissionStream(client, {
 			subreddit: subredditName,
