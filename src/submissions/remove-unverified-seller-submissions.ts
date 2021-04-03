@@ -1,5 +1,5 @@
 import { Submission } from 'snoowrap';
-import { client } from '../client';
+import { getClient } from '../client';
 import { utils } from '../utils';
 
 const { getDescription, getFlair, match, removeUnverifiedSellerSubmission, log } = utils;
@@ -44,7 +44,7 @@ export const removeUnverifiedSellerSubmissions = async (submission: Submission) 
 				log.info('⚠️ [UNVERIFIED_SELLER_DETECTED][AUTHOR:%s][%s][%s]', submission.author.name, flair.flair_text, submission.title);
 				// Set user's flair
 				// @ts-expect-error
-				await client._selectFlair({
+				await getClient()._selectFlair({
 					subredditName: 'horny',
 					name,
 					flair_template_id: '3d7f8042-39be-11eb-910f-0eb386cc13ed'

@@ -1,5 +1,5 @@
 import pThrottle from 'p-throttle';
-import { client } from '../client';
+import { getClient } from '../client';
 import { utils } from '../utils';
 import pWaitFor from 'p-wait-for';
 import {
@@ -18,7 +18,7 @@ const onceASecond = pThrottle({
 });
 
 export const scanSubmissionsForViolations = async () => {
-	const subreddit = client.getSubreddit('horny');
+	const subreddit = getClient().getSubreddit('horny');
 	const submissions = await subreddit.getNew({
 		limit: 250
 	});

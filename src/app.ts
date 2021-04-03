@@ -1,14 +1,13 @@
 import { CommentStream, SubmissionStream } from 'snoostorm';
-import { client } from './client';
+import { getClient } from './client';
 import { subreddit as subredditName } from './config';
-import { utils } from './utils';
+import { log } from './log';
 import { queue } from './queues';
 
-const { log } = utils;
 const collectors = {
 	live: async () => {
 		// Comments
-		const comments = new CommentStream(client, {
+		const comments = new CommentStream(getClient(), {
 			subreddit: subredditName,
 			limit: 500,
 			pollTime: 30000
@@ -25,7 +24,7 @@ const collectors = {
 			});
 		});
 
-		const submissions = new SubmissionStream(client, {
+		const submissions = new SubmissionStream(getClient(), {
 			subreddit: subredditName,
 			limit: 100,
 			pollTime: 10000
@@ -43,7 +42,7 @@ const collectors = {
 		});
 	},
 	massscan: async () => {
-		const subreddit = client.getSubreddit(`/r/${subredditName}`);
+		const subreddit = getClient().getSubreddit(`/r/${subredditName}`);
 
 		// Submissions
 		const submissions = await subreddit.getHot({

@@ -1,6 +1,6 @@
 /* eslint-disable capitalized-comments */
 import pmx from '@pm2/io';
-import { log, toggleDebugLogs } from '../utils/log';
+import { toggleDebugLogs } from '../log';
 
 // pm2 trigger auto-mod-skylar-$env toggle-debug-logs
 // $env=production

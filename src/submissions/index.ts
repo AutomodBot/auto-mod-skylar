@@ -1,5 +1,6 @@
 export * from './log-submission';
 export * from './record-submission-stats';
+export * from './remove-sketchy-submission';
 export * from './remove-spam-submission';
 export * from './remove-stolen-submission';
 export * from './remove-submission-asking-for-upvotes';
