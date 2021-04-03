@@ -8,3 +8,16 @@ export const log = {
 	debug: isProduction ? noop : console.debug,
 	error: console.error
 };
+
+// Return true/false depending if debug logs get enabled
+export const toggleDebugLogs = () => {
+	// Enable debug logs
+	if (log.debug === noop) {
+		log.debug = console.debug;
+		return true;
+	}
+
+	// Disable debug logs
+	log.debug = noop;
+	return false;
+};
