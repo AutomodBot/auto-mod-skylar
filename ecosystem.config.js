@@ -1,34 +1,49 @@
+const fs = require('fs');
+
+const services = fs.readdirSync('./src/services').map(service => {
+	const _ = service.split('.');
+	return _[_.length - 2];
+});
+
 module.exports = {
 	apps: [
 		{
-			name: 'auto-mod-skylar',
-			script: 'npm start',
+			namespace: 'skylar',
+			name: 'controller',
+			script: './dist/index.js',
 			time: true,
 			// eslint-disable-next-line
 			append_env_to_name: true,
 			instances: 1,
 			autorestart: true,
+			node_args : '-r dotenv/config',
 			// eslint-disable-next-line
-			max_restarts: 50,
+			max_restarts: 5,
 			watch: false,
 			// eslint-disable-next-line
-			max_memory_restart: '250M',
+			max_memory_restart: '100M',
 			env: {
-				LOG_LEVEL: 'debug',
 				NODE_ENV: 'production'
 			}
-		}
-	],
-	deploy: {
-		production: {
-			user: 'xo',
-			host: '165.227.220.113',
-			key: '~/.ssh/deploy.key',
-			ref: 'origin/main',
-			repo: 'https://github.com/automodbot/auto-mod-skylar',
-			path: '/home/xo/code/automodbot/auto-mod-skylar',
-			'pre-deploy': 'git reset --hard',
-			'post-deploy': 'npm install && npm run build && pm2 startOrGracefulReload ecosystem.config.js --env production'
-		}
-	}
+		},
+		...services.map(service => ({
+			namespace: 'skylar',
+			name: service,
+			script: `./dist/${service}.js`,
+			time: true,
+			// eslint-disable-next-line
+			append_env_to_name: true,
+			instances: 1,
+			autorestart: true,
+			node_args : '-r dotenv/config',
+			// eslint-disable-next-line
+			max_restarts: 1,
+			watch: false,
+			// eslint-disable-next-line
+			max_memory_restart: '100M',
+			env: {
+				NODE_ENV: 'production'
+			}
+		}))
+	]
 };
